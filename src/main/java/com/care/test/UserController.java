@@ -1,6 +1,7 @@
 package com.care.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,12 @@ import java.util.List;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     @GetMapping("/home")
     public String root(){
@@ -49,6 +52,10 @@ public class UserController {
         System.out.println(member.getName());
 //        System.out.println(member.getBirth());
         System.out.println(member.getGender());
+
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(member.getPw());
+        member.setPw(encodedPassword);
 
         userRepository.save(member);
         return "list";
