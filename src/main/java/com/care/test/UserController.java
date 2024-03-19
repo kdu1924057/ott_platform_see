@@ -24,11 +24,11 @@ public class UserController {
     }
     @GetMapping("/home")
     public String root(){
+
         return "home";
     }
     @GetMapping("/join")
-    public String join(Model model){
-        model.addAttribute("member", new Member());
+    public String join(){
         System.out.println("GetMapping /join");
         return "join.html";
     }
@@ -47,7 +47,7 @@ public class UserController {
 //        }
         System.out.println("PostMapping /join");
 //        System.out.println(member.getId());
-        System.out.println(member.getLogin_id());
+        System.out.println(member.getLoginid());
         System.out.println(member.getPw());
         System.out.println(member.getName());
 //        System.out.println(member.getBirth());
@@ -58,9 +58,33 @@ public class UserController {
         member.setPw(encodedPassword);
 
         userRepository.save(member);
-        return "list";
+        return "redirect:list";
     }
 
+    @GetMapping("/login")
+    public String login(){
+        System.out.println("GetMapping /login");
+        return "login.html";
+    }
+
+    @PostMapping("/login")
+    public String login_check(@ModelAttribute("login_data")Member member){
+        System.out.println("PostMapping /login");
+        System.out.println(member.getLoginid());
+        // 데이터베이스에서 해당 ID 값을 가진 회원을 조회
+        Member foundMember = userRepository.findByLoginid(member.getLoginid());
+        System.out.println(foundMember.getLoginid());
+        if(foundMember == null){
+            return "데이터베이스에서 가져온 데이터가 없습니다.";
+        }
+
+        // 조회된 회원이 없거나 비밀번호가 일치하지 않으면 로그인 실패
+        if (!passwordEncoder.matches(member.getPw(), foundMember.getPw())) {
+            return "login_fail.html"; // 로그인 실패 페이지로 이동
+        } else {
+            return "redirect:login"; // 로그인 성공 페이지로 이동
+        }
+    }
     @GetMapping("/list")
     public String getAllUsers(Model model) {
         model.addAttribute("users", userRepository.findAll());

@@ -15,7 +15,7 @@ public class Member {
     //얘도 자동으로 증가시켜주는 기능이 포함된 거 같다. 그래서 String으로 하면 에러가 뜬다.
     //기존엔 gpt가 Long으로 알려준 상태였고, 난 id를 입력할 때 String 타입으로 입력했다.
     //그래서 뜬 에러도 존재할 가능성이 높다.(테스트)
-    private String login_id;
+    private String loginid;
     private String pw;
     private String name;
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -34,12 +34,12 @@ public class Member {
 //    }
 
     // Getter and Setter for id
-    public String getLogin_id() {
-        return login_id;
+    public String getLoginid() {
+        return loginid;
     }
 
-    public void setLogin_id(String login_id) {
-        this.login_id = login_id;
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
     }
 
     // Getter and Setter for pw
