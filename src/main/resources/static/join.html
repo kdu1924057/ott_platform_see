@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물 작성폼</title>
+</head>
+<body>
+<div class="layout">
+    <form action="join" method="post">
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">id</label>
+            <input type="text" name="loginid" id="exampleFormControlInput1" placeholder="Your Name">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="password" class="form-label">password</label><br>
+            <input id="password" name="pw" type="password">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">name</label><br>
+            <input type="text" name="name">
+        </div>
+        <div class="mb-3">
+            <label for="gender" class="form-label">gender</label><br>
+            <select id="gender" name="gender">
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+            </select>
+        </div>
+        <button type="submit">작성</button>
+    </form>
+</div>
+</body>
+</html>
