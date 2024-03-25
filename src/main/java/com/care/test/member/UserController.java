@@ -31,15 +31,6 @@ public class UserController {
     //
     @PostMapping("/join")
     public String registerUser(@ModelAttribute("user") Member member) {
-        // 사용자가 입력한 날짜 값을 String으로부터 Date로 변환
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        try {
-//            Date parsedDate = new Date(dateFormat.parse(member.getBirthString()).getTime());
-//            member.setBirth(parsedDate);
-//        } catch (ParseException e) {
-//            // 날짜 변환 오류 처리
-//            e.printStackTrace();
-//        }
         System.out.println("PostMapping /join");
 //        System.out.println(member.getId());
         System.out.println(member.getLoginid());

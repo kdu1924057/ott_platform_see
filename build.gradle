@@ -27,7 +27,7 @@ dependencies {
 	// spring-security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// 아임포트
-	implementation 'com.github.iamport:iamport-rest-client-java:0.1.6'
+	implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
 }
 
 tasks.named('test') {

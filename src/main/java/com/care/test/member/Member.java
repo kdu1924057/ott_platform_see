@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "member")
@@ -18,8 +19,8 @@ public class Member {
     private String loginid;
     private String pw;
     private String name;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
-//    private Date birth;
+    private LocalDate birthday;    // 생년월일
+
     private Boolean gender;
 
     public Member() {
@@ -76,6 +77,14 @@ public class Member {
 
     public void setGender(Boolean gender) {
         this.gender = gender;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
 //    public String getBirthString() {
