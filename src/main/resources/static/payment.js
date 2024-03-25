@@ -1,6 +1,24 @@
 $(document).ready(function (){
     $("#payment").click(function (){
-        payment();
+        // 서버로부터 현재 구독권의 가격을 가져와서 비교
+        $.ajax({
+            type: "GET",
+            url: "/getSubscriptionPrice",
+            success: function (response) {
+                var subscriptionPrice = parseInt(JSON.parse(response).price); // JSON 문자열을 파싱하여 price 추출
+                var amount = 5000; // 결제할 금액
+
+                if (amount === subscriptionPrice) {
+                    // 가격이 일치하면 결제 진행
+                    payment();
+                } else {
+                    alert("구독권 가격이 일치하지 않습니다.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("가격 가져오기 실패:", error);
+            }
+        });
     });
 });
 
