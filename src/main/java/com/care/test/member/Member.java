@@ -1,9 +1,10 @@
-package com.care.test;
+package com.care.test.member;
 
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "member")
@@ -18,8 +19,8 @@ public class Member {
     private String loginid;
     private String pw;
     private String name;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
-//    private Date birth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birth;
     private Boolean gender;
 
     public Member() {
@@ -60,14 +61,14 @@ public class Member {
         this.name = name;
     }
 
-    // Getter and Setter for birth
-//    public Date getBirth() {
-//        return birth;
-//    }
 
-//    public void setBirth(Date birth) {
-//        this.birth = birth;
-//    }
+    public LocalDate getBirth() {
+        return birth;
+    }
+
+    public void setBirth(LocalDate birth){
+        this.birth = birth;
+    }
 
     // Getter and Setter for gender
     public Boolean getGender() {
