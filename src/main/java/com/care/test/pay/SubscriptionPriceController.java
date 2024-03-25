@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class SubscriptionPriceController {
+public class SubscriptionPriceController { // 사전검증 코드(구독권 가격 비교후 결제 진행)
 
     @Autowired
     private TicketInfoRepository ticketInfoRepository;

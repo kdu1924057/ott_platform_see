@@ -25,6 +25,8 @@ public class PaymentsController {
         System.out.println("Ticket Price: " + payment.getAmount());
 
         // 데이터베이스에서 구독권 가격을 조회하여 결제된 가격과 비교
+        // 후검증 결제 진행후 DB와 가격 비교후 데이터 저장 불일치 저장x
+        // 불일치시 결제 취소코드 추가 예정
         TicketInfo ticketInfo = ticketInfoRepository.findFirstByOrderByPriceAsc();
         String paymentAmount = ticketInfo.getPrice();
 
