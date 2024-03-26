@@ -1,28 +1,39 @@
 $(document).ready(function (){
     $("#payment").click(function (){
-        // 서버로부터 현재 구독권의 가격을 가져와서 비교
+        // 세션에서 로그인 ID 가져오기
         $.ajax({
             type: "GET",
-            url: "/getSubscriptionPrice",
+            url: "/sessionid", // 세션 ID를 가져오는 엔드포인트
             success: function (response) {
-                var subscriptionPrice = parseInt(JSON.parse(response).price); // JSON 문자열을 파싱하여 price 추출
-                var amount = 5000; // 결제할 금액
+                var loginId = JSON.parse(response).session_id; // JSON 문자열을 파싱하여 세션 ID 추출
+                // 서버로부터 현재 구독권의 가격을 가져와서 비교
+                $.ajax({
+                    type: "GET",
+                    url: "/getSubscriptionPrice",
+                    success: function (response) {
+                        var subscriptionPrice = parseInt(JSON.parse(response).price); // JSON 문자열을 파싱하여 price 추출
+                        var amount = 5000; // 결제할 금액
 
-                if (amount === subscriptionPrice) {
-                    // 가격이 일치하면 결제 진행
-                    payment();
-                } else {
-                    alert("구독권 가격이 일치하지 않습니다.");
-                }
+                        if (amount === subscriptionPrice) {
+                            // 가격이 일치하면 결제 진행
+                            payment(loginId); // 결제 함수에 로그인 ID를 전달
+                        } else {
+                            alert("구독권 가격이 일치하지 않습니다.");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("가격 가져오기 실패:", error);
+                    }
+                });
             },
             error: function(xhr, status, error) {
-                console.error("가격 가져오기 실패:", error);
+                console.error("세션 ID 가져오기 실패:", error);
             }
         });
     });
 });
 
-function payment() {
+function payment(buyer_name) {
     var merchant_uid = 'iamport_see_' + new Date().getTime();
     var amount = 5000; // 결제할 금액
     var ticket_date = new Date().toISOString().split('T')[0];
@@ -35,11 +46,11 @@ function payment() {
         name: "정기구독권",
         amount: amount,
         ticket_date: ticket_date,
-        buyer_name: "홍길동",
+        buyer_name: buyer_name, // 로그인 ID 사용
     }, function (rsp){
         if(rsp.success){
             // 결제 성공 시 데이터를 저장
-            savePaymentData(rsp.imp_uid, rsp.merchant_uid, "정기구독권", "홍길동", amount, ticket_date);
+            savePaymentData(rsp.imp_uid, rsp.merchant_uid, "정기구독권", buyer_name, amount, ticket_date);
             alert("완료 -> imp_uid: " + rsp.imp_uid + " / merchant_uid(orderKdy) : " + rsp.merchant_uid);
         } else {
             // 결제 실패 시 데이터를 저장

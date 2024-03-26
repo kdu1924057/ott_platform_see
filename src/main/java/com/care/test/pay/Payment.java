@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "ticket")
-public class Payment {
+public class Payment { // 결제정보를 넣을 Entity
     @Id
     private String ticket_id; // 결제번호
     private String ticket_uid; // 고유번호

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public class PaymentService {
+public class PaymentService { // 사용x
 
     @Autowired
     private TicketInfoRepository ticketInfoRepository;
