@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 @Controller
@@ -23,7 +24,7 @@ public class UserController {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    @GetMapping("/home")
+    @RequestMapping("/home")
     public String root(){
 
         return "home";
@@ -34,7 +35,6 @@ public class UserController {
         return "join.html";
     }
 
-    //
     @PostMapping("/join")
     public String registerUser(@ModelAttribute("user") Member member) {
         // 사용자가 입력한 날짜 값을 String으로부터 Date로 변환
@@ -59,7 +59,7 @@ public class UserController {
         member.setPw(encodedPassword);
 
         userRepository.save(member);
-        return "redirect:login.html";
+        return "login";
     }
 
     @GetMapping("/login")
@@ -70,7 +70,7 @@ public class UserController {
 
     @GetMapping("/login_success")
     public String login_success(){
-        return "login_success.html";
+        return "login_success";
     }
 
     @PostMapping("login")
@@ -112,16 +112,15 @@ public class UserController {
         System.out.println("session id : " + session_id);
         Member foundId = userRepository.findByLoginid((session_id));
         userRepository.deleteByLoginid(foundId.getLoginid());
-        return "forward:join.html";
+        return "home";
     }
     @PostMapping("/myData")
-    public String list(HttpSession session, Model model, Member member){
-//        member = userRepository.findByLoginid((String)session.getAttribute("login_success_id"));
-//        model.addAttribute("members", member);
-//        System.out.println("model : " + model.getAttribute("members"));
-        String foundId = (String)session.getAttribute("login_success_id");
-        List<Member> members = userRepository.findByLoginid(foundId);
-        model.addAttribute("members",members);
-        return "myData.html";
+    public String myData(HttpSession session, Model model, Member member){
+        String foundId = (String) session.getAttribute("login_success_id");
+        member = userRepository.findByLoginid(foundId);
+        List<Member> members = new ArrayList<>();
+        members.add(member);
+        model.addAttribute("members", members);
+        return "myData";
     }
 }

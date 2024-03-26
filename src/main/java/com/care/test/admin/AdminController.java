@@ -83,10 +83,9 @@ public class AdminController {
             return "redirect:login_success.html"; // 로그인 성공 페이지로 이동
         }
     }
-    @GetMapping("/list")
+    @GetMapping("/userList")
     public String getAllUsers(Model model) {
         model.addAttribute("users", userRepository.findAll());
-        System.out.println("GetMapping /list");
         return "myData.html"; // user-myData.html 파일과 매핑됩니다.
     }
 

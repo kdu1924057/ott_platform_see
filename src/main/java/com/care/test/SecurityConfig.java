@@ -1,4 +1,4 @@
-package com.care.test.member;
+package com.care.test;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
