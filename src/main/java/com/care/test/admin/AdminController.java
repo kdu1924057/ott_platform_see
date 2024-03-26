@@ -1,6 +1,7 @@
 package com.care.test.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.care.test.member.UserRepository;
+import  org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,37 +12,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AdminController {
 
-    private final AdminRepository userRepository;
+    private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminController(AdminRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public AdminController(UserRepository userRepository, AdminRepository adminRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.adminRepository = adminRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    @GetMapping("/home")
-    public String root(){
-
-        return "home";
-    }
-    @GetMapping("/adjoin")
+    @GetMapping("/adJoin")
     public String join(){
         System.out.println("GetMapping /join");
         return "join.html";
     }
-
-    //
-    @PostMapping("/adjoin")
+    @PostMapping("/adJoin")
     public String registerUser(@ModelAttribute("user") Admin admin) {
-        // 사용자가 입력한 날짜 값을 String으로부터 Date로 변환
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        try {
-//            Date parsedDate = new Date(dateFormat.parse(member.getBirthString()).getTime());
-//            member.setBirth(parsedDate);
-//        } catch (ParseException e) {
-//            // 날짜 변환 오류 처리
-//            e.printStackTrace();
-//        }
         System.out.println("PostMapping /join");
         System.out.println(admin.getAdminId());
         System.out.println(admin.getAdminId());
@@ -50,48 +37,22 @@ public class AdminController {
         String encodedPassword = passwordEncoder.encode(admin.getAdminId());
         admin.setAdminPw(encodedPassword);
 
-        userRepository.save(admin);
-        return "redirect:login.html";
+        //adminRepository JPA로 데이터 저장
+        adminRepository.save(admin);
+        return "login";
     }
 
-    @GetMapping("/adlogin")
+    @GetMapping("/adLogin")
     public String login(){
         System.out.println("GetMapping /login");
-        return "login.html";
+        return "login";
     }
 
-    @GetMapping("/login_success")
-    public String login_success(){
-        return "login_success.html";
-    }
-
-    @PostMapping("/login")
-    public String login_check(@ModelAttribute("login_data") Admin admin){
-        System.out.println("PostMapping /login");
-        System.out.println(admin.getAdminId());
-        // 데이터베이스에서 해당 ID 값을 가진 회원을 조회
-        Admin foundAdmin = userRepository.findByAdminId(admin.getAdminId());
-        System.out.println(foundAdmin.getAdminpw());
-        if(foundAdmin == null){
-            return "데이터베이스에서 가져온 데이터가 없습니다.";
-        }
-
-        // 조회된 회원이 없거나 비밀번호가 일치하지 않으면 로그인 실패
-        if (!passwordEncoder.matches(admin.getAdminpw(), foundAdmin.getAdminpw())) {
-            return "login_fail.html"; // 로그인 실패 페이지로 이동
-        } else {
-            return "redirect:login_success.html"; // 로그인 성공 페이지로 이동
-        }
-    }
     @GetMapping("/userList")
     public String getAllUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
-        return "myData.html"; // user-myData.html 파일과 매핑됩니다.
+        //userRepository 가져와서 해당 데이터 출력
+        model.addAttribute("members", userRepository.findAll());
+        return "myData"; // user-myData.html 파일과 매핑됩니다.
     }
 
-    @PostMapping("/delete")
-    public String delete(Admin admin){
-        userRepository.deleteByAdminId(admin.getAdminId());
-        return "회원 정보 삭제 완료";
-    }
 }

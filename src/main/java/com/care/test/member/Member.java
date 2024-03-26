@@ -26,14 +26,6 @@ public class Member {
     public Member() {
     }
 
-//    public Integer getId(){
-//        return id;
-//    }
-
-//    public void setId(Integer id){
-//        this.id = id;
-//    }
-
     // Getter and Setter for id
     public String getLoginid() {
         return loginid;
@@ -79,13 +71,6 @@ public class Member {
         this.gender = gender;
     }
 
-//    public String getBirthString() {
-//        if (this.birth != null) {
-//            return this.birth.toString();
-//        } else {
-//            return null;
-//        }
-//    }
 }
 
 

@@ -21,7 +21,6 @@ public class Admin {
         this.adminId = adminId;
     }
 
-    // Getter and Setter for pw
     public String getAdminpw() {
         return adminPw;
     }
