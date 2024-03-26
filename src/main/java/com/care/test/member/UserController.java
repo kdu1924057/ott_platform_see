@@ -1,11 +1,15 @@
 package com.care.test.member;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 @Controller
 public class UserController {
 
@@ -17,7 +21,7 @@ public class UserController {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    @GetMapping("/home")
+    @RequestMapping("/home")
     public String root(){
 
         return "home";
@@ -28,15 +32,14 @@ public class UserController {
         return "join.html";
     }
 
-    //
     @PostMapping("/join")
     public String registerUser(@ModelAttribute("user") Member member) {
+
         System.out.println("PostMapping /join");
-//        System.out.println(member.getId());
         System.out.println(member.getLoginid());
         System.out.println(member.getPw());
         System.out.println(member.getName());
-//        System.out.println(member.getBirth());
+        System.out.println(member.getBirth());
         System.out.println(member.getGender());
 
         // 비밀번호 암호화
@@ -44,7 +47,7 @@ public class UserController {
         member.setPw(encodedPassword);
 
         userRepository.save(member);
-        return "redirect:list";
+        return "login";
     }
 
     @GetMapping("/login")
@@ -53,27 +56,59 @@ public class UserController {
         return "login.html";
     }
 
-    @PostMapping("/login")
-    public String login_check(@ModelAttribute("login_data")Member member){
+    @GetMapping("/login_success")
+    public String login_success(){
+        return "login_success";
+    }
+
+    @PostMapping("login")
+    public String login_check(@ModelAttribute("login_data")Member member, HttpServletRequest request) {
         System.out.println("PostMapping /login");
         System.out.println(member.getLoginid());
         // 데이터베이스에서 해당 ID 값을 가진 회원을 조회
         Member foundMember = userRepository.findByLoginid(member.getLoginid());
-        System.out.println(foundMember.getLoginid());
-        if(foundMember == null){
-            return "데이터베이스에서 가져온 데이터가 없습니다.";
+        if (member.getLoginid().equals(foundMember.getLoginid())) {
+            String foundId = foundMember.getLoginid();
+            System.out.println(foundId);
+            if (passwordEncoder.matches(member.getPw(), foundMember.getPw())) {
+                HttpSession session = request.getSession();
+                session.setAttribute("login_success_id", foundId);
+                System.out.println("get session");
+                return "redirect:/login_success";
+            } else {
+                return "redirect:login_fail.html";
+            }
         }
-
-        // 조회된 회원이 없거나 비밀번호가 일치하지 않으면 로그인 실패
-        if (!passwordEncoder.matches(member.getPw(), foundMember.getPw())) {
-            return "login_fail.html"; // 로그인 실패 페이지로 이동
-        } else {
-            return "redirect:login"; // 로그인 성공 페이지로 이동
-        }
+        return "찾으시는 아이디가 없습니다.";
     }
-    @GetMapping("/list")
-    public String getAllUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
-        return "list"; // user-list.html 파일과 매핑됩니다.
+
+
+    @GetMapping("/update")
+    public String update(){
+        System.out.println("Getmapping update");
+        return "update.html";
+    }
+
+    @PostMapping("/update")
+    public void update(@ModelAttribute("user_update")Member member){
+
+    }
+    @PostMapping("/delete")
+    public String delete(HttpSession session){
+        System.out.println("PostMapping /delete");
+        String session_id = (String)session.getAttribute("login_success_id");
+        System.out.println("session id : " + session_id);
+        Member foundId = userRepository.findByLoginid((session_id));
+        userRepository.deleteByLoginid(foundId.getLoginid());
+        return "home";
+    }
+    @PostMapping("/myData")
+    public String myData(HttpSession session, Model model, Member member){
+        String foundId = (String) session.getAttribute("login_success_id");
+        member = userRepository.findByLoginid(foundId);
+        List<Member> members = new ArrayList<>();
+        members.add(member);
+        model.addAttribute("members", members);
+        return "myData";
     }
 }

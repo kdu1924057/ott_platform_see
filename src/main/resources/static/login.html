@@ -21,7 +21,9 @@
         </div>
         <br/>
         <button type="submit">로그인</button>
-        <button type="button" th:onclick="location.href='/join'" th:if=${loginType}">회원 가입</button> <br/><br/>
+    </form>
+    <form action="join" method="get">
+        <button type="submit">회원 가입</button>
     </form>
 </div>
 </body>

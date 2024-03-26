@@ -1,8 +1,9 @@
 package com.care.test.member;
 
-import com.care.test.member.Member;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+@Transactional
 public interface UserRepository extends JpaRepository<Member, String> {
     Member findByLoginid(String loginid);
+    Member deleteByLoginid(String loginid);
 }
